@@ -66,9 +66,9 @@ class Image_data:
 
     def preprocess(self):
 
-        self.image = glob(self.img_dataset_path + '/*.*')
-        self.segmap = glob(self.segmap_dataset_path + '/*.*')
-        self.segmap_test = glob(self.segmap_test_dataset_path + '/*.*')
+        self.image = sorted(glob(self.img_dataset_path + '/*.*'), key=os.path.basename)
+        self.segmap = sorted(glob(self.segmap_dataset_path + '/*.*'), key=os.path.basename)
+        self.segmap_test = sorted(glob(self.segmap_test_dataset_path + '/*.*'), key=os.path.basename)
         segmap_label_path = os.path.join(self.dataset_path, 'segmap_label.txt')
 
         if os.path.exists(segmap_label_path) :
@@ -205,7 +205,8 @@ def merge(images, size):
         i = idx % size[1]
         j = idx // size[1]
         img[h*j:h*(j+1), w*i:w*(i+1), :] = image
-
+    if img.shape[-1] == 1:
+        img = img[..., 0]
     return img
 
 def show_all_variables():
