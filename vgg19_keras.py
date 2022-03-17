@@ -9,6 +9,11 @@ class VGGLoss(tf.keras.Model):
         self.layer_weights = [1.0/32, 1.0/16, 1.0/8, 1.0/4, 1.0]
 
     def call(self, x, y):
+        if x.shape[-1] == 1:
+            x = tf.tile(x, [1, 1, 1, 3])
+        if y.shape[-1] == 1:
+            y = tf.tile(y, [1, 1, 1, 3])
+
         x = ((x + 1) / 2) * 255.0
         y = ((y + 1) / 2) * 255.0
         x_vgg, y_vgg = self.vgg(preprocess_input(x)), self.vgg(preprocess_input(y))
